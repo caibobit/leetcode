@@ -5,7 +5,7 @@ Created on Thu Oct 26 12:53:47 2017
 @author: caibo
 两者求和直接遍历
 三者求和设置一次遍历，然后设置i，j向内判断
-
+下面的例子中target=0
 def threeSum(self, nums):
     res = []
     nums.sort()
@@ -58,8 +58,35 @@ class solution:
         results = []
         findNsum(sorted(nums), target, 3, [], results)
         return results
+
+    def combinationSum(self, candidates, target):
+        """
+        提升一下，可以重复使用candidate中的元素来构成target
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        res = []
+        candidates.sort()
+        self.dfs(candidates, target, 0, [], res)
+        return res
+    
+    def dfs(self, nums, target, index, path, res):
+        if target < 0:
+            return  # backtracking
+        if target == 0:
+            res.append(path)
+            return 
+        for i in range(index, len(nums)):
+            self.dfs(nums, target-nums[i], i+1, path+[nums[i]], res)
+#如果将self.dfs(nums, target-nums[i], i, path+[nums[i]], res)
+#改为self.dfs(nums, target-nums[i], i+1, path+[nums[i]], res)
+#那么将不允许重复使用
+#此外通过修改if target == 0 and  len(path)==2
+#可以控制几个数相加，解决了N-sum问题从另外一个角度
 a= solution()
-nums=[-1,0,1,2,-2,0,1,1,3,-3]
-target=0
+nums=[7,5,4,3,2]
+target=9
 res=a.fourSum(nums,target)
-print (res)
+res1=a.combinationSum(nums,target)
+print (res1)
