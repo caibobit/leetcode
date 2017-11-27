@@ -69,8 +69,26 @@ class solution:
         res = []
         candidates.sort()
         self.dfs(candidates, target, 0, [], res)
-        return res
-    
+        lres=[]
+        for i in res:
+            if i not in lres:
+                lres.append(i)
+        return lres
+    #输入有重复的元素但是，解中不能有重复的解
+    #直接return res则是返回所有的解，可能有重复
+    #另外一种解法：
+    def combinationSum2(self, candidates, target):
+        candidates.sort()
+        table = [None] + [set() for i in range(target)]
+        for i in candidates:
+            if i > target:
+                break
+            for j in range(target - i, 0, -1):
+                table[i + j] |= {elt + (i,) for elt in table[j]}
+            table[i].add((i,))
+        return list(map(list, table[target]))
+    #python3 中map等高阶函数需要使用list返回结果，
+    #因为这些函数作用的结果都是返回一个list
     def dfs(self, nums, target, index, path, res):
         if target < 0:
             return  # backtracking
@@ -85,8 +103,8 @@ class solution:
 #此外通过修改if target == 0 and  len(path)==2
 #可以控制几个数相加，解决了N-sum问题从另外一个角度
 a= solution()
-nums=[7,5,4,3,2]
-target=9
+nums=[10,1,2,7,6,1,5]
+target=8
 res=a.fourSum(nums,target)
-res1=a.combinationSum(nums,target)
+res1=a.combinationSum2(nums,target)
 print (res1)
